@@ -30,7 +30,9 @@ Generated CSV files, logs, SQLite files, and `.env` are ignored by Git.
 
 ---
 
-## Windows setup
+## Windows setup / daily start
+
+Create the virtual environment and install requirements once:
 
 ```powershell
 cd C:\Users\banco\VistaBalayan_ETL_Pipeline
@@ -38,6 +40,15 @@ py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 py -m pip install -r requirements.txt
 ```
+
+After that, you do **not** need to recreate `.venv` or reinstall requirements every time. In a new PowerShell window, just go to the project folder and activate the existing environment:
+
+```powershell
+cd C:\Users\banco\VistaBalayan_ETL_Pipeline
+.\.venv\Scripts\Activate.ps1
+```
+
+Then run the pipeline commands below in that same activated PowerShell window.
 
 If you are extracting directly from Supabase, create a private `.env` file:
 

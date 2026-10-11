@@ -213,13 +213,22 @@ Validation result categories:
 
 # 5. Command Procedure
 
-## 5.1 Windows setup
+## 5.1 Windows setup / daily start
+
+Create the virtual environment and install requirements once:
 
 ```powershell
 cd C:\Users\banco\VistaBalayan_ETL_Pipeline
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 py -m pip install -r requirements.txt
+```
+
+After that, do **not** recreate `.venv` or reinstall requirements every time. In each new PowerShell window, only activate the existing environment before running commands:
+
+```powershell
+cd C:\Users\banco\VistaBalayan_ETL_Pipeline
+.\.venv\Scripts\Activate.ps1
 ```
 
 If using direct Supabase extraction, create `.env` from the template:
