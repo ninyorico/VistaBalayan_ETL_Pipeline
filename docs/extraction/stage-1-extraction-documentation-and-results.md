@@ -1,4 +1,4 @@
-# Stage 1: Data Extraction Documentation
+# Stage 1: Data Extraction Documentation and Results
 
 ## VistaBalayan Tourism Data Analytics and Decision Support Pipeline
 
@@ -28,7 +28,7 @@ Supporting files for setup, documentation, and safe repository use:
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — template for private local connection values.
 - `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
-- `docs/extraction/stage-1-extraction-guide.md` — Stage 1 extraction procedure and validation results.
+- `docs/extraction/stage-1-extraction-documentation-and-results.md` — Stage 1 extraction procedure and validation results.
 
 ## 1.2 Stage 1 checklist mapping
 
@@ -42,7 +42,7 @@ Supporting files for setup, documentation, and safe repository use:
 - Run extraction and handle errors: extraction logs table-level failures in `logs/csv_extraction_*.json`.
 - Check CSV files, record counts, columns, and relationships: SQLite build and metadata validation commands perform these checks.
 - Fix discrepancies: validation output lists `failed_checks` and `warning_checks` for correction.
-- Create `docs/extraction/stage-1-extraction-guide.md`: this file documents the extraction procedure.
+- Create `docs/extraction/stage-1-extraction-documentation-and-results.md`: this file documents the extraction procedure.
 - Record procedures and validation results: see Sections 6 and 7.
 - Review files and exclude sensitive data: `.gitignore` excludes secrets and generated data.
 - Commit and push the Stage 1 extraction implementation.
@@ -300,7 +300,7 @@ The user's successful local extraction produced:
 ```json
 {
   "overall_status": "PASS",
-  "sqlite_output": "C:\\Users\\banco\\VistaBalayan_ETL_Pipeline\\data\\processed\\vistabalayan_staging.sqlite",
+  "sqlite_output": "C:\\Users\\banco\\VistaBalayan_ETL_Pipeline\\pipeline\\processed\\vistabalayan_staging.sqlite",
   "tables": {
     "establishments": 38,
     "visitor_reports": 2397,
@@ -352,9 +352,8 @@ The repository excludes:
 - `.venv/` and `venv/`
 - `__pycache__/`
 - `.pytest_cache/`
-- `pipeline/raw/*.csv`
-- `pipeline/processed/*.sqlite`
-- `pipeline/processed/*.db`
+- `pipeline/raw/*` except `pipeline/raw/.gitkeep`
+- `pipeline/processed/*` except `pipeline/processed/.gitkeep`
 - `logs/*.json`
 - `logs/*.log`
 
