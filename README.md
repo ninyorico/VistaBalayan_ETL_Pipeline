@@ -13,18 +13,18 @@ The current milestone is **Stage 1: Data Extraction**. The pipeline extracts the
 
 Important Stage 1 code files:
 
-- `src/database.py` — connection loading and Supabase/PostgREST connection test.
-- `src/extract.py` — batch extraction to CSV files.
+- `pipeline/database.py` — connection loading and Supabase/PostgREST connection test.
+- `pipeline/extract.py` — batch extraction to CSV files.
 - `main.py` — command-line pipeline runner.
-- `src/staging.py` — CSV-to-SQLite staging builder.
-- `src/validate.py` — metadata and relationship validator.
+- `pipeline/staging.py` — CSV-to-SQLite staging builder.
+- `pipeline/validate.py` — metadata and relationship validator.
 
 Supporting Stage 1 files:
 
 - `config/pipeline_config.json` — table/file/relationship configuration.
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — local secret template.
-- `documentation/data-extraction.md` — procedures and validation results.
+- `docs/extraction/data-extraction.md` — procedures and validation results.
 
 Generated CSV files, logs, SQLite files, and `.env` are ignored by Git.
 

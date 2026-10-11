@@ -16,11 +16,11 @@ This repository focuses on **Stage 1: Data Extraction** only.
 
 ## 1.1 Important Stage 1 code files
 
-- `src/database.py` — Supabase/PostgREST connection loading and connection test.
-- `src/extract.py` — batch extraction logic that saves source tables as CSV files.
-- `main.py` — command-line entry point for connection test, CSV extraction, SQLite build, and validation.
-- `src/staging.py` — local CSV-to-SQLite staging builder.
-- `src/validate.py` — metadata, count, column, date, primary-key, and relationship validator.
+- `pipeline/database.py` — Supabase/PostgREST connection loading and connection test.
+- `pipeline/extract.py` — batch extraction logic that saves source tables as CSV files.
+- `main.py` — command-line entry point.
+- `pipeline/staging.py` — local CSV-to-SQLite staging builder.
+- `pipeline/validate.py` — metadata, count, column, date, primary-key, and relationship validator.
 
 Supporting files for setup, documentation, and safe repository use:
 
@@ -28,21 +28,21 @@ Supporting files for setup, documentation, and safe repository use:
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — template for private local connection values.
 - `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
-- `documentation/data-extraction.md` — Stage 1 extraction procedure and validation results.
+- `docs/extraction/data-extraction.md` — Stage 1 extraction procedure and validation results.
 
 ## 1.2 Stage 1 checklist mapping
 
 - Create project folder and virtual environment: repository structure supports `.venv/` and Windows `py -m venv .venv`.
 - Install dependencies and create `requirements.txt`: `requirements.txt` is present.
 - Set up `.env` and `.gitignore`: `.env.example` is present and `.env` is ignored.
-- Create `src/database.py` and test the connection: `main.py test-connection` uses `src/database.py`.
-- Create `src/extract.py`: implemented with batch CSV export helpers.
+- Create `pipeline/database.py` and test the connection: `main.py test-connection` uses `pipeline/database.py`.
+- Create `pipeline/extract.py`: implemented with batch CSV export helpers.
 - Extract all four tables in batches and save as CSV files: `main.py extract-csv` exports the four configured tables.
 - Configure `main.py`: implemented with subcommands.
 - Run extraction and handle errors: extraction logs table-level failures in `logs/csv_extraction_*.json`.
 - Check CSV files, record counts, columns, and relationships: SQLite build and metadata validation commands perform these checks.
 - Fix discrepancies: validation output lists `failed_checks` and `warning_checks` for correction.
-- Create `documentation/data-extraction.md`: this file documents the extraction procedure.
+- Create `docs/extraction/data-extraction.md`: this file documents the extraction procedure.
 - Record procedures and validation results: see Sections 6 and 7.
 - Review files and exclude sensitive data: `.gitignore` excludes secrets and generated data.
 - Commit and push the Stage 1 extraction implementation.
@@ -88,22 +88,22 @@ Python retrieves tourism records from the source system in batches and saves the
 VistaBalayan PostgreSQL/Supabase
               |
               v
-       src/database.py
+       pipeline/database.py
               |
               v
-        src/extract.py
+        pipeline/extract.py
               |
               v
          data/raw/*.csv
               |
               v
-      src/staging.py
+      pipeline/staging.py
               |
               v
  data/processed/vistabalayan_staging.sqlite
               |
               v
-      src/validate.py
+      pipeline/validate.py
 ```
 
 ## 2.4 Extraction Schedule
@@ -237,7 +237,7 @@ Do not commit `.env`.
 py main.py test-connection
 ```
 
-This uses `src/database.py` and reads connection values from `.env`.
+This uses `pipeline/database.py` and reads connection values from `.env`.
 
 ## 5.3 Extract all four source tables to CSV
 

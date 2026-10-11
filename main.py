@@ -14,10 +14,10 @@ import argparse
 import json
 from pathlib import Path
 
-from src.database import DEFAULT_TABLES, create_client
-from src.extract import export_all_tables
-from src.staging import run as build_sqlite
-from src.validate import validate_sqlite
+from pipeline.database import DEFAULT_TABLES, create_client
+from pipeline.extract import export_all_tables
+from pipeline.staging import run as build_sqlite
+from pipeline.validate import validate_sqlite
 
 
 def command_test_connection(args: argparse.Namespace) -> dict:
