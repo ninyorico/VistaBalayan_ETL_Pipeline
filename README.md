@@ -23,12 +23,11 @@ Supporting Stage 1 files:
 
 - `pipeline/pipeline_config.json` — table/file/relationship configuration.
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
-- `.env.example` — local secret template.
 - `documentation/data-extraction.md` — Stage 1 extraction guide and command procedure.
 - `documentation/extraction-results.md` — recorded local extraction and validation results.
 - `documentation/logs/` — local generated JSON/log output folder.
 
-Generated CSV files, documentation logs, SQLite files, and `.env` are ignored by Git.
+Generated CSV files, documentation logs, and SQLite files are ignored by Git.
 
 ---
 
@@ -52,32 +51,11 @@ cd C:\Users\banco\VistaBalayan_ETL_Pipeline
 
 Then run the pipeline commands below in that same activated PowerShell window.
 
-If you are extracting directly from Supabase, create a private `.env` file:
-
-```powershell
-Copy-Item .env.example .env
-notepad .env
-```
-
-Do not commit `.env`.
-
 ---
 
 ## Main commands
 
-### Test Supabase connection
-
-```powershell
-py main.py test-connection
-```
-
-### Extract four source tables to CSV
-
-```powershell
-py main.py extract-csv
-```
-
-The `pipeline/raw/` folder is included in the repository with a `.gitkeep` placeholder. Put or generate CSV files there:
+Place the exported CSV files inside `pipeline/raw/`:
 
 ```text
 pipeline/raw/establishments.csv
@@ -104,14 +82,6 @@ pipeline/processed/vistabalayan_staging.sqlite
 
 ```powershell
 py main.py validate
-```
-
-### Full direct pipeline
-
-When `.env` is configured with valid Supabase values:
-
-```powershell
-py main.py all
 ```
 
 ---
