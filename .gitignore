@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local ETL data outputs
+/data/raw/*.csv
+/data/processed/*.db
+/data/processed/*.sqlite
+/logs/*.json
+/logs/*.log
+
+# Keep directory placeholders
+!/data/raw/.gitkeep
+!/data/processed/.gitkeep
+!/logs/.gitkeep
+
+# OS/editor
+.DS_Store
+.vscode/
