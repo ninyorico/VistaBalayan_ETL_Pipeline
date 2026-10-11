@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate the local VistaBalayan SQLite staging database.
 
-This is the second ETL step after scripts/extract_to_sqlite.py. It reads the local
+This is the second ETL step after src/staging.py. It reads the local
 SQLite file only; it does not connect to or modify Supabase/PostgreSQL.
 """
 

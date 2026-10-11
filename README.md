@@ -16,8 +16,8 @@ Important Stage 1 code files:
 - `src/database.py` — connection loading and Supabase/PostgREST connection test.
 - `src/extract.py` — batch extraction to CSV files.
 - `main.py` — command-line pipeline runner.
-- `scripts/extract_to_sqlite.py` — CSV-to-SQLite staging builder.
-- `scripts/validate_metadata.py` — metadata and relationship validator.
+- `src/staging.py` — CSV-to-SQLite staging builder.
+- `src/validate.py` — metadata and relationship validator.
 
 Supporting Stage 1 files:
 
@@ -85,22 +85,10 @@ This creates:
 data/processed/vistabalayan_staging.sqlite
 ```
 
-The direct script also works:
-
-```powershell
-py scripts\extract_to_sqlite.py
-```
-
 ### Validate metadata and relationships
 
 ```powershell
 py main.py validate
-```
-
-The direct script also works:
-
-```powershell
-py scripts\validate_metadata.py
 ```
 
 ### Full direct pipeline
