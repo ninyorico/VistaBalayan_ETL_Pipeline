@@ -73,7 +73,7 @@ def add_common_paths(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--config", default=Path("pipeline/pipeline_config.json"), type=Path)
     parser.add_argument("--raw-dir", default=Path("pipeline/raw"), type=Path)
     parser.add_argument("--sqlite-output", default=Path("pipeline/processed/vistabalayan_staging.sqlite"), type=Path)
-    parser.add_argument("--log-dir", default=Path("logs"), type=Path)
+    parser.add_argument("--log-dir", default=Path("documentation/logs"), type=Path)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -88,7 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
     extract_parser = subparsers.add_parser("extract-csv", help="Extract Supabase tables to pipeline/raw CSV files")
     extract_parser.add_argument("--env", default=Path(".env"), type=Path)
     extract_parser.add_argument("--output-dir", default=Path("pipeline/raw"), type=Path)
-    extract_parser.add_argument("--log-dir", default=Path("logs"), type=Path)
+    extract_parser.add_argument("--log-dir", default=Path("documentation/logs"), type=Path)
     extract_parser.add_argument("--batch-size", type=int)
     extract_parser.add_argument("--tables", nargs="*")
     extract_parser.set_defaults(func=command_extract_csv)

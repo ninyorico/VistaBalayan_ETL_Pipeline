@@ -116,7 +116,7 @@ def export_all_tables(
     output_dir: Path = Path("pipeline/raw"),
     tables: tuple[str, ...] = DEFAULT_TABLES,
     batch_size: int | None = None,
-    log_dir: Path = Path("logs"),
+    log_dir: Path = Path("documentation/logs"),
 ) -> dict[str, Any]:
     """Extract all Stage 1 source tables from Supabase into local CSV files."""
 
