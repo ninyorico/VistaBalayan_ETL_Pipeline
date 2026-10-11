@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Main entry point for the VistaBalayan ETL pipeline.
 
-Issue #3 workflow:
+Stage 1 workflow:
 1. Test the Supabase connection.
 2. Extract the four source tables in batches and save CSV files.
 3. Build the local SQLite staging database from those CSV files.

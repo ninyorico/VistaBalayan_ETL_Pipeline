@@ -118,7 +118,7 @@ def export_all_tables(
     batch_size: int | None = None,
     log_dir: Path = Path("logs"),
 ) -> dict[str, Any]:
-    """Extract all Issue #3 tables from Supabase into local CSV files."""
+    """Extract all Stage 1 source tables from Supabase into local CSV files."""
 
     log_dir.mkdir(parents=True, exist_ok=True)
     result: dict[str, Any] = {

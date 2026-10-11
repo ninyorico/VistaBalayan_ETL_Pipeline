@@ -10,22 +10,27 @@ The VistaBalayan pipeline processes tourism records including visitor reports, a
 
 ---
 
-# 1. Issue #3 Implementation Scope
+# 1. Stage 1 Implementation Scope
 
-This repository follows the GitHub issue titled **Implementation of the VistaBalayan Data Extraction Pipeline #3**.
+This repository focuses on **Stage 1: Data Extraction** only.
 
-## 1.1 Required project files
+## 1.1 Important Stage 1 code files
 
-- `requirements.txt` — Python/test dependencies.
-- `.env.example` — template for private local connection values.
-- `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
 - `src/database.py` — Supabase/PostgREST connection loading and connection test.
 - `src/extract.py` — batch extraction logic that saves source tables as CSV files.
 - `main.py` — command-line entry point for connection test, CSV extraction, SQLite build, and validation.
 - `scripts/extract_to_sqlite.py` — local CSV-to-SQLite staging builder.
 - `scripts/validate_metadata.py` — metadata, count, column, date, primary-key, and relationship validator.
 
-## 1.2 Issue checklist mapping
+Supporting files for setup, documentation, and safe repository use:
+
+- `config/pipeline_config.json` — Stage 1 table/file/relationship configuration.
+- `requirements.txt` — Python/test dependencies.
+- `.env.example` — template for private local connection values.
+- `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
+- `documentation/data-extraction.md` — Stage 1 extraction procedure and test results.
+
+## 1.2 Stage 1 checklist mapping
 
 - Create project folder and virtual environment: repository structure supports `.venv/` and Windows `py -m venv .venv`.
 - Install dependencies and create `requirements.txt`: `requirements.txt` is present.
@@ -40,7 +45,7 @@ This repository follows the GitHub issue titled **Implementation of the VistaBal
 - Create `documentation/data-extraction.md`: this file documents the extraction procedure.
 - Record procedures and test results: see Sections 6 and 7.
 - Review files and exclude sensitive data: `.gitignore` excludes secrets and generated data.
-- Commit, push, and update milestone: implementation is committed and pushed to GitHub.
+- Commit and push the Stage 1 extraction implementation.
 
 ---
 
@@ -306,7 +311,7 @@ The user's successful local extraction produced:
 }
 ```
 
-This confirms that the local CSV-to-SQLite extraction step successfully loaded all four Issue #3 tables.
+This confirms that the local CSV-to-SQLite extraction step successfully loaded all four Stage 1 source tables.
 
 ---
 
@@ -318,7 +323,7 @@ Repository test command:
 py -m pytest -q
 ```
 
-Verified result after adding Issue #3 structure:
+Verified result after adding the Stage 1 code structure:
 
 ```text
 8 passed in 2.72s

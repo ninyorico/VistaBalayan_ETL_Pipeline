@@ -11,11 +11,17 @@ The current milestone is **Stage 1: Data Extraction**. The pipeline extracts the
 - `accommodation_reports`
 - `room_occupancy_details`
 
-The issue-required structure is included:
+Important Stage 1 code files:
 
 - `src/database.py` — connection loading and Supabase/PostgREST connection test.
 - `src/extract.py` — batch extraction to CSV files.
 - `main.py` — command-line pipeline runner.
+- `scripts/extract_to_sqlite.py` — CSV-to-SQLite staging builder.
+- `scripts/validate_metadata.py` — metadata and relationship validator.
+
+Supporting Stage 1 files:
+
+- `config/pipeline_config.json` — table/file/relationship configuration.
 - `requirements.txt` — Python/test dependencies.
 - `.env.example` — local secret template.
 - `documentation/data-extraction.md` — procedures and test results.
