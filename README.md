@@ -21,7 +21,7 @@ Important Stage 1 code files:
 
 Supporting Stage 1 files:
 
-- `config/pipeline_config.json` — table/file/relationship configuration.
+- `pipeline/pipeline_config.json` — table/file/relationship configuration.
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — local secret template.
 - `docs/extraction/data-extraction.md` — procedures and validation results.
@@ -67,10 +67,10 @@ py main.py extract-csv
 This creates:
 
 ```text
-data/raw/establishments.csv
-data/raw/visitor_reports.csv
-data/raw/accommodation_reports.csv
-data/raw/room_occupancy_details.csv
+pipeline/raw/establishments.csv
+pipeline/raw/visitor_reports.csv
+pipeline/raw/accommodation_reports.csv
+pipeline/raw/room_occupancy_details.csv
 ```
 
 ### Build SQLite staging database from CSV exports
@@ -82,7 +82,7 @@ py main.py build-sqlite
 This creates:
 
 ```text
-data/processed/vistabalayan_staging.sqlite
+pipeline/processed/vistabalayan_staging.sqlite
 ```
 
 ### Validate metadata and relationships

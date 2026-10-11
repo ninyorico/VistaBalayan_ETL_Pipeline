@@ -113,7 +113,7 @@ def export_table_to_csv(client: BatchClient, table: str, output_dir: Path, batch
 
 def export_all_tables(
     client: SupabaseRestClient,
-    output_dir: Path = Path("data/raw"),
+    output_dir: Path = Path("pipeline/raw"),
     tables: tuple[str, ...] = DEFAULT_TABLES,
     batch_size: int | None = None,
     log_dir: Path = Path("logs"),

@@ -70,9 +70,9 @@ def command_all(args: argparse.Namespace) -> dict:
 
 
 def add_common_paths(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--config", default=Path("config/pipeline_config.json"), type=Path)
-    parser.add_argument("--raw-dir", default=Path("data/raw"), type=Path)
-    parser.add_argument("--sqlite-output", default=Path("data/processed/vistabalayan_staging.sqlite"), type=Path)
+    parser.add_argument("--config", default=Path("pipeline/pipeline_config.json"), type=Path)
+    parser.add_argument("--raw-dir", default=Path("pipeline/raw"), type=Path)
+    parser.add_argument("--sqlite-output", default=Path("pipeline/processed/vistabalayan_staging.sqlite"), type=Path)
     parser.add_argument("--log-dir", default=Path("logs"), type=Path)
 
 
@@ -85,15 +85,15 @@ def build_parser() -> argparse.ArgumentParser:
     test_parser.add_argument("--table", default="establishments")
     test_parser.set_defaults(func=command_test_connection)
 
-    extract_parser = subparsers.add_parser("extract-csv", help="Extract Supabase tables to data/raw CSV files")
+    extract_parser = subparsers.add_parser("extract-csv", help="Extract Supabase tables to pipeline/raw CSV files")
     extract_parser.add_argument("--env", default=Path(".env"), type=Path)
-    extract_parser.add_argument("--output-dir", default=Path("data/raw"), type=Path)
+    extract_parser.add_argument("--output-dir", default=Path("pipeline/raw"), type=Path)
     extract_parser.add_argument("--log-dir", default=Path("logs"), type=Path)
     extract_parser.add_argument("--batch-size", type=int)
     extract_parser.add_argument("--tables", nargs="*")
     extract_parser.set_defaults(func=command_extract_csv)
 
-    sqlite_parser = subparsers.add_parser("build-sqlite", help="Build SQLite staging DB from data/raw CSV files")
+    sqlite_parser = subparsers.add_parser("build-sqlite", help="Build SQLite staging DB from pipeline/raw CSV files")
     add_common_paths(sqlite_parser)
     sqlite_parser.set_defaults(func=command_build_sqlite)
 

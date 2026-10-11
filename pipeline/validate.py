@@ -241,7 +241,7 @@ def validate_sqlite(config_path: Path, sqlite_path: Path | None = None, log_dir:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate VistaBalayan local SQLite staging metadata and relationships.")
-    parser.add_argument("--config", default="config/pipeline_config.json", type=Path)
+    parser.add_argument("--config", default="pipeline/pipeline_config.json", type=Path)
     parser.add_argument("--sqlite", type=Path, help="Path to staging SQLite database. Defaults to config sqlite_output.")
     parser.add_argument("--log-dir", type=Path)
     args = parser.parse_args()

@@ -11,15 +11,12 @@ venv/
 !.env.example
 
 # Local ETL data outputs
-/data/raw/*.csv
-/data/processed/*.db
-/data/processed/*.sqlite
+/pipeline/raw/
+/pipeline/processed/
 /logs/*.json
 /logs/*.log
 
 # Keep directory placeholders
-!/data/raw/.gitkeep
-!/data/processed/.gitkeep
 !/logs/.gitkeep
 
 # OS/editor

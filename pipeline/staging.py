@@ -196,7 +196,7 @@ def run(config_path: Path, raw_dir: Path | None = None, sqlite_output: Path | No
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Load VistaBalayan CSV exports into a local SQLite staging database.")
-    parser.add_argument("--config", default="config/pipeline_config.json", type=Path)
+    parser.add_argument("--config", default="pipeline/pipeline_config.json", type=Path)
     parser.add_argument("--raw-dir", type=Path)
     parser.add_argument("--sqlite-output", type=Path)
     parser.add_argument("--log-dir", type=Path)

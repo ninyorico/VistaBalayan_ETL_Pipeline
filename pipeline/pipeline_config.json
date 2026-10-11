@@ -1,7 +1,7 @@
 {
   "pipeline_name": "VistaBalayan Tourism Data Analytics and Decision Support Pipeline",
-  "raw_data_dir": "data/raw",
-  "sqlite_output": "data/processed/vistabalayan_staging.sqlite",
+  "raw_data_dir": "pipeline/raw",
+  "sqlite_output": "pipeline/processed/vistabalayan_staging.sqlite",
   "log_dir": "logs",
   "tables": {
     "establishments": {

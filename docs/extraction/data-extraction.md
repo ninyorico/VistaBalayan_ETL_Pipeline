@@ -24,7 +24,7 @@ This repository focuses on **Stage 1: Data Extraction** only.
 
 Supporting files for setup, documentation, and safe repository use:
 
-- `config/pipeline_config.json` — Stage 1 table/file/relationship configuration.
+- `pipeline/pipeline_config.json` — Stage 1 table/file/relationship configuration.
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — template for private local connection values.
 - `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
@@ -94,13 +94,13 @@ VistaBalayan PostgreSQL/Supabase
         pipeline/extract.py
               |
               v
-         data/raw/*.csv
+       pipeline/raw/*.csv
               |
               v
       pipeline/staging.py
               |
               v
- data/processed/vistabalayan_staging.sqlite
+ pipeline/processed/vistabalayan_staging.sqlite
               |
               v
       pipeline/validate.py
@@ -123,7 +123,7 @@ The extraction includes these source tables:
 
 1. Tourism records must exist in PostgreSQL/Supabase before extraction begins.
 2. A local `.env` file is required only when extracting directly from Supabase.
-3. Raw CSV exports may also be placed manually in `data/raw/` for offline Lab 2 processing.
+3. Raw CSV exports may also be placed manually in `pipeline/raw/` for offline Lab 2 processing.
 4. Required source tables and columns must exist.
 5. Generated raw CSV files, logs, SQLite files, and credentials are excluded from Git.
 6. Unexpected database schema changes may cause extraction validation to fail.
@@ -247,14 +247,14 @@ py main.py extract-csv
 
 Expected CSV outputs:
 
-- `data/raw/establishments.csv`
-- `data/raw/visitor_reports.csv`
-- `data/raw/accommodation_reports.csv`
-- `data/raw/room_occupancy_details.csv`
+- `pipeline/raw/establishments.csv`
+- `pipeline/raw/visitor_reports.csv`
+- `pipeline/raw/accommodation_reports.csv`
+- `pipeline/raw/room_occupancy_details.csv`
 
 ## 5.4 Build local SQLite staging database
 
-If CSV files already exist in `data/raw/`, run:
+If CSV files already exist in `pipeline/raw/`, run:
 
 ```powershell
 py main.py build-sqlite
@@ -263,7 +263,7 @@ py main.py build-sqlite
 This writes:
 
 ```text
-data/processed/vistabalayan_staging.sqlite
+pipeline/processed/vistabalayan_staging.sqlite
 ```
 
 ## 5.5 Validate metadata and relationships
@@ -341,9 +341,9 @@ The repository excludes:
 - `.venv/` and `venv/`
 - `__pycache__/`
 - `.pytest_cache/`
-- `data/raw/*.csv`
-- `data/processed/*.sqlite`
-- `data/processed/*.db`
+- `pipeline/raw/*.csv`
+- `pipeline/processed/*.sqlite`
+- `pipeline/processed/*.db`
 - `logs/*.json`
 - `logs/*.log`
 
