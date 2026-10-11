@@ -1,4 +1,4 @@
-# Stage 1: Data Extraction Documentation and Results
+# Stage 1: Data Extraction Guide
 
 ## VistaBalayan Tourism Data Analytics and Decision Support Pipeline
 
@@ -28,7 +28,7 @@ Supporting files for setup, documentation, and safe repository use:
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — template for private local connection values.
 - `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
-- `docs/extraction/stage-1-extraction-documentation-and-results.md` — Stage 1 extraction procedure and validation results.
+- `docs/extraction/data-extraction.md` — Stage 1 extraction guide and command procedure.
 
 ## 1.2 Stage 1 checklist mapping
 
@@ -42,8 +42,8 @@ Supporting files for setup, documentation, and safe repository use:
 - Run extraction and handle errors: extraction logs table-level failures in `logs/csv_extraction_*.json`.
 - Check CSV files, record counts, columns, and relationships: SQLite build and metadata validation commands perform these checks.
 - Fix discrepancies: validation output lists `failed_checks` and `warning_checks` for correction.
-- Create `docs/extraction/stage-1-extraction-documentation-and-results.md`: this file documents the extraction procedure.
-- Record procedures and validation results: see Sections 6 and 7.
+- Create `docs/extraction/data-extraction.md`: this file documents the extraction procedure.
+- Record extraction and validation results separately in `docs/extraction/extraction-results.md`.
 - Review files and exclude sensitive data: `.gitignore` excludes secrets and generated data.
 - Commit and push the Stage 1 extraction implementation.
 
@@ -293,57 +293,7 @@ py main.py all
 
 ---
 
-# 6. Recorded Local Extraction Result
-
-The user's successful local extraction produced:
-
-```json
-{
-  "overall_status": "PASS",
-  "sqlite_output": "C:\\Users\\banco\\VistaBalayan_ETL_Pipeline\\pipeline\\processed\\vistabalayan_staging.sqlite",
-  "tables": {
-    "establishments": 38,
-    "visitor_reports": 2397,
-    "accommodation_reports": 1857,
-    "room_occupancy_details": 5938
-  }
-}
-```
-
-This confirms that the local CSV-to-SQLite extraction step successfully loaded all four Stage 1 source tables.
-
----
-
-# 7. Validation Results
-
-The local Stage 1 metadata validation completed successfully:
-
-```text
-overall_status: PASS
-```
-
-Validated table counts:
-
-- `establishments`: 38
-- `visitor_reports`: 2,397
-- `accommodation_reports`: 1,857
-- `room_occupancy_details`: 5,938
-
-Relationship checks passed with `missing_parent_count: 0` for:
-
-- `visitor_reports.establishment_id` → `establishments.id`
-- `accommodation_reports.establishment_id` → `establishments.id`
-- `room_occupancy_details.accommodation_report_id` → `accommodation_reports.id`
-
-The command entry point was also checked with:
-
-```text
-python3 main.py --help
-```
-
----
-
-# 8. Sensitive Data Review
+# 6. Sensitive Data Review
 
 The repository excludes:
 

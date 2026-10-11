@@ -24,7 +24,8 @@ Supporting Stage 1 files:
 - `pipeline/pipeline_config.json` — table/file/relationship configuration.
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — local secret template.
-- `docs/extraction/stage-1-extraction-documentation-and-results.md` — Stage 1 extraction documentation and recorded validation results.
+- `docs/extraction/data-extraction.md` — Stage 1 extraction guide and command procedure.
+- `docs/extraction/extraction-results.md` — recorded local extraction and validation results.
 
 Generated CSV files, logs, SQLite files, and `.env` are ignored by Git.
 
@@ -114,21 +115,10 @@ py main.py all
 
 ---
 
-## Local extraction result already verified
+## Local extraction result
 
-The current local CSV-to-SQLite extraction passed with these counts:
-
-- `establishments`: 38
-- `visitor_reports`: 2,397
-- `accommodation_reports`: 1,857
-- `room_occupancy_details`: 5,938
-
----
-
-## Validation
-
-The latest local validation passed with:
+The recorded extraction and validation outputs are kept separately from the guide:
 
 ```text
-overall_status: PASS
+docs/extraction/extraction-results.md
 ```
