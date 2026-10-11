@@ -6,258 +6,353 @@
 
 The objective of the extraction stage is to retrieve tourism data from the VistaBalayan source system and prepare a documented, traceable, and validated dataset for the succeeding Transformation Stage.
 
-The VistaBalayan pipeline processes tourism records including visitor reports, accommodation report and establishment information. PostgreSQL serves as the primary structured data storage, while Python retrieves tourism records for batch processing.
+The VistaBalayan pipeline processes tourism records including visitor reports, accommodation reports, room occupancy details, and establishment information. PostgreSQL/Supabase serves as the primary structured data storage, while Python retrieves tourism records through batch extraction.
 
 ---
 
-# 1. Data Source and Extraction Specifications
+# 1. Issue #3 Implementation Scope
 
-## 1.1 Source System
+This repository follows the GitHub issue titled **Implementation of the VistaBalayan Data Extraction Pipeline #3**.
+
+## 1.1 Required project files
+
+- `requirements.txt` — Python/test dependencies.
+- `.env.example` — template for private local connection values.
+- `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
+- `src/database.py` — Supabase/PostgREST connection loading and connection test.
+- `src/extract.py` — batch extraction logic that saves source tables as CSV files.
+- `main.py` — command-line entry point for connection test, CSV extraction, SQLite build, and validation.
+- `scripts/extract_to_sqlite.py` — local CSV-to-SQLite staging builder.
+- `scripts/validate_metadata.py` — metadata, count, column, date, primary-key, and relationship validator.
+
+## 1.2 Issue checklist mapping
+
+- Create project folder and virtual environment: repository structure supports `.venv/` and Windows `py -m venv .venv`.
+- Install dependencies and create `requirements.txt`: `requirements.txt` is present.
+- Set up `.env` and `.gitignore`: `.env.example` is present and `.env` is ignored.
+- Create `src/database.py` and test the connection: `main.py test-connection` uses `src/database.py`.
+- Create `src/extract.py`: implemented with batch CSV export helpers.
+- Extract all four tables in batches and save as CSV files: `main.py extract-csv` exports the four configured tables.
+- Configure `main.py`: implemented with subcommands.
+- Run extraction and handle errors: extraction logs table-level failures in `logs/csv_extraction_*.json`.
+- Check CSV files, record counts, columns, and relationships: SQLite build and metadata validation scripts perform these checks.
+- Fix discrepancies: validation output lists `failed_checks` and `warning_checks` for correction.
+- Create `documentation/data-extraction.md`: this file documents the extraction procedure.
+- Record procedures and test results: see Sections 6 and 7.
+- Review files and exclude sensitive data: `.gitignore` excludes secrets and generated data.
+- Commit, push, and update milestone: implementation is committed and pushed to GitHub.
+
+---
+
+# 2. Data Source and Extraction Specifications
+
+## 2.1 Source System
 
 **Source System:** VistaBalayan System
 
-**Purpose:**  
-The VistaBalayan system collects and manages tourism information submitted by participating tourist establishments. Establishment staff encode and submit tourism records, which are stored in the database and used for monitoring, reporting, analytics, dashboards, and decision-support functions.
+**Purpose:** The VistaBalayan system collects and manages tourism information submitted by participating tourist establishments. Establishment staff encode and submit tourism records, which are stored in the database and used for monitoring, reporting, analytics, dashboards, and decision-support functions.
 
 The source records include:
 
+- Establishment information
 - Visitor reports
 - Accommodation reports
-- Establishment information
+- Room occupancy details
 
+## 2.2 Source Database or File
 
-## 1.2 Source Database or File
-
-**Database Management System:** PostgreSQL
+**Database Management System:** PostgreSQL/Supabase
 
 **Source Database:** VistaBalayan PostgreSQL Database
 
-**File Format:** CSV
+**Intermediate File Format:** CSV
 
-PostgreSQL is used as the primary database for structured tourism information. The source schema includes establishments, visitor reports, accommodation reports, and related tourism records.
+**Local Staging Format:** SQLite
 
-## 1.3 Extraction Method
+PostgreSQL/Supabase is used as the primary database for structured tourism information. The extraction layer can pull records from Supabase through PostgREST into CSV files, then build a local SQLite staging database for safe Lab 2 metadata work without committing or exposing credentials.
+
+## 2.3 Extraction Method
 
 **Extraction Type:** Batch Extraction
 
 **Extraction Tool:** Python
 
-Python retrieves tourism records from PostgreSQL for batch processing.
-
-### Extraction Process
+Python retrieves tourism records from the source system in batches and saves the extracted tables as CSV files.
 
 ```text
-VistaBalayan PostgreSQL Database
+VistaBalayan PostgreSQL/Supabase
               |
               v
-       Python Extraction
+       src/database.py
               |
               v
-      Raw Extracted Data
+        src/extract.py
               |
               v
-   Extraction Validation
+         data/raw/*.csv
               |
               v
-    Transformation Stage
+ scripts/extract_to_sqlite.py
+              |
+              v
+ data/processed/vistabalayan_staging.sqlite
+              |
+              v
+ scripts/validate_metadata.py
 ```
 
-### Extraction Schedule
+## 2.4 Extraction Schedule
 
-The pipeline performs **daily batch processing**, with weekly or monthly aggregation when required.
+The pipeline is designed for daily batch processing, with weekly or monthly aggregation when required. Manual Lab 2 runs are executed from the command line.
 
-### Incremental Extraction
+## 2.5 Extraction Scope
 
-The VistaBalayan pipeline uses incremental extraction to retrieve newly added or updated tourism records from the PostgreSQL source database. The extraction uses the applicable reporting date or timestamp field to identify records within the defined extraction window. This approach minimizes unnecessary retrieval of previously processed records and allows the pipeline to focus on new or updated tourism data during each scheduled batch run.
+The extraction includes these source tables:
 
-An incremental extraction rule will use the approved date or timestamp field as the extraction reference. The extracted records will then undergo extraction-level validation before being handed over to the Transformation Stage.
+- `establishments` — tourism establishment information.
+- `visitor_reports` — visitor counts and visitor-origin information.
+- `accommodation_reports` — accommodation and guest statistics.
+- `room_occupancy_details` — room-level occupancy information.
 
+## 2.6 Source Limitations and Assumptions
 
-## 1.4 Extraction Scope
-
-The extraction includes the tourism information required by the VistaBalayan data pipeline.
-
-| Source Table / Data | Extraction Purpose |
-|---|---|
-| `establishments` | Retrieve tourism establishment information |
-| `visitor_reports` | Retrieve visitor counts and visitor-origin information |
-| `accommodation_reports` | Retrieve accommodation and guest statistics |
-| `room_occupancy_details` | Retrieve room-level occupancy information |
-
-The extraction covers the records available in PostgreSQL at the scheduled batch run.
-
-## 1.5 Source Limitations and Assumptions
-
-The following limitations and assumptions apply:
-
-1. Tourism records must be available in PostgreSQL before extraction begins.
-2. Python must be able to establish a valid connection to PostgreSQL.
-3. Required source tables and columns must exist.
-4. The current documentation does not define an incremental extraction watermark.
-5. The current documentation does not specify a historical cutoff date.
+1. Tourism records must exist in PostgreSQL/Supabase before extraction begins.
+2. A local `.env` file is required only when extracting directly from Supabase.
+3. Raw CSV exports may also be placed manually in `data/raw/` for offline Lab 2 processing.
+4. Required source tables and columns must exist.
+5. Generated raw CSV files, logs, SQLite files, and credentials are excluded from Git.
 6. Unexpected database schema changes may cause extraction validation to fail.
-7. Database connectivity problems may interrupt an extraction run.
+7. Database connectivity problems may interrupt direct Supabase extraction.
 
 ---
 
-# 2. Source Tables and Column Specification
+# 3. Source Tables and Relationships
 
-## 2.1 `establishments`
+## 3.1 `establishments`
 
-### Purpose
+Purpose: contains information identifying and classifying tourism establishments.
 
-The `establishments` table contains information identifying and classifying tourism establishments.
+Important columns:
 
-| Column | Data Type | Key / Constraint | Purpose |
-|---|---|---|---|
-| `id` | UUID | Primary Key | Unique identifier of the tourism establishment |
-| `name` | VARCHAR(150) | NOT NULL | Name of the establishment |
-| `type` | VARCHAR(50) | NOT NULL | Establishment classification |
-| `total_rooms` | INTEGER | DEFAULT 0 | Total rooms for accommodation establishments |
+- `id` — primary key.
+- `name` — establishment name.
+- `type` — establishment classification.
+- `status` — active/inactive status.
+- `created_at`, `updated_at` — metadata timestamps when present.
 
-**Reason for inclusion:** Establishment information is required to associate tourism records with a specific tourism establishment.
+## 3.2 `visitor_reports`
 
-## 2.2 `visitor_reports`
+Purpose: contains visitor information submitted by tourism establishments.
 
-### Purpose
+Important columns:
 
-The `visitor_reports` table contains visitor information submitted by tourism establishments.
+- `id` — primary key.
+- `establishment_id` — foreign key to `establishments.id`.
+- `report_date` — date covered by the report.
+- `status` — report approval/review status.
+- Visitor count/origin columns when present in the export.
 
-| Column | Data Type | Key / Constraint | Purpose |
-|---|---|---|---|
-| `id` | UUID | Primary Key | Unique visitor report identifier |
-| `establishment_id` | UUID | Foreign Key → `establishments(id)` | Identifies the reporting establishment |
-| `report_date` | DATE | NOT NULL | Date covered by the report |
-| `male_visitors` | INTEGER | DEFAULT 0 | Number of male visitors |
-| `female_visitors` | INTEGER | DEFAULT 0 | Number of female visitors |
-| `total_visitors` | INTEGER | NOT NULL | Total number of visitors |
-| `residence_category` | VARCHAR(50) | — | Visitor origin category |
-| `municipality` | VARCHAR(100) | — | Municipality of origin |
-| `province` | VARCHAR(100) | — | Province of origin |
-| `country` | VARCHAR(100) | — | Country of origin for foreign visitors |
+## 3.3 `accommodation_reports`
 
-**Reason for inclusion:** Visitor reports are the primary source for visitor monitoring, visitor trends, and tourism reporting.
+Purpose: contains accommodation-related tourism statistics.
 
-## 2.3 `accommodation_reports`
+Important columns:
 
-### Purpose
+- `id` — primary key.
+- `establishment_id` — foreign key to `establishments.id`.
+- `report_date` — date covered by the report.
+- `status` — report approval/review status.
+- Accommodation metrics when present in the export.
 
-The `accommodation_reports` table contains accommodation-related tourism statistics.
+## 3.4 `room_occupancy_details`
 
-| Column | Data Type | Key / Constraint | Purpose |
-|---|---|---|---|
-| `id` | UUID | Primary Key | Unique accommodation report identifier |
-| `establishment_id` | UUID | Foreign Key → `establishments(id)` | Identifies the reporting establishment |
-| `report_date` | DATE | NOT NULL | Date covered by the report |
-| `total_rooms` | INTEGER | NOT NULL | Total available rooms |
-| `occupied_rooms` | INTEGER | DEFAULT 0 | Number of occupied rooms |
-| `guest_check_ins` | INTEGER | DEFAULT 0 | Number of guest check-ins |
-| `guest_nights` | INTEGER | DEFAULT 0 | Total guest nights |
-| `foreign_guest_check_ins` | INTEGER | DEFAULT 0 | Foreign guest check-ins |
-| `foreign_guest_nights` | INTEGER | DEFAULT 0 | Foreign guest nights |
+Purpose: provides detailed room-level accommodation information.
 
-**Reason for inclusion:** Accommodation records are required for monitoring accommodation activity and guest statistics.
+Important columns:
 
-## 2.4 `room_occupancy_details`
+- `id` — primary key.
+- `accommodation_report_id` — foreign key to `accommodation_reports.id`.
+- Room, occupancy, check-in, or guest-night fields when present in the export.
 
-### Purpose
+## 3.5 Source Relationships
 
-The `room_occupancy_details` table provides detailed room-level accommodation information.
-
-| Column | Data Type | Key / Constraint | Purpose |
-|---|---|---|---|
-| `id` | UUID | Primary Key | Unique room occupancy detail identifier |
-| `accommodation_report_id` | UUID | Foreign Key → `accommodation_reports(id)` | Identifies the related accommodation report |
-| `room_type` | VARCHAR(100) | NOT NULL | Room category |
-| `number_of_rooms` | INTEGER | DEFAULT 0 | Number of rooms under the room type |
-| `occupied_rooms` | INTEGER | DEFAULT 0 | Occupied rooms under the room type |
-| `check_ins` | INTEGER | DEFAULT 0 | Check-ins for the room type |
-| `guest_nights` | INTEGER | DEFAULT 0 | Guest nights for the room type |
-
-**Reason for inclusion:** This table provides room-level information needed for accommodation and occupancy analysis.
-
-
-## 2.6 Source Relationships
-
-| Relationship | Description |
-|---|---|
-| `establishments` → `visitor_reports` | One establishment can have many visitor reports through `visitor_reports.establishment_id`. |
-| `establishments` → `accommodation_reports` | One establishment can have many accommodation reports through `accommodation_reports.establishment_id`. |
-| `accommodation_reports` → `room_occupancy_details` | One accommodation report can have many room occupancy detail records through `room_occupancy_details.accommodation_report_id`. |
+- `establishments.id` → `visitor_reports.establishment_id`
+- `establishments.id` → `accommodation_reports.establishment_id`
+- `accommodation_reports.id` → `room_occupancy_details.accommodation_report_id`
 
 ---
 
-# 3. Extraction Validation and Data Quality Checks
+# 4. Validation and Data Quality Checks
 
-The extraction stage focuses on verifying that the data was successfully retrieved from the source. Data cleaning, standardization, and business transformations are handled in later stages.
+The extraction stage verifies that data was successfully retrieved from the source. Cleaning, standardization, and business transformations belong to later stages.
 
-## 3.1 Validation Checks
+Validation checks include:
 
-| Check Name | Target | Purpose | Validation Criteria |
-|---|---|---|---|
-| Source Connection | PostgreSQL database | Verify source accessibility | Connection succeeds |
-| Required Tables | All required source tables | Ensure required tables exist | All required tables are found |
-| Required Columns | Selected columns | Ensure required fields exist | All required columns exist |
-| Identifier Presence | Primary and foreign keys | Ensure records can be identified and related | Required identifiers are present |
-| Primary Key Uniqueness | Primary key columns | Detect duplicate identifiers | No duplicate primary keys |
-| Record Count | Extracted tables | Verify records were retrieved | Record counts are successfully recorded |
-| Extraction Completeness | Extraction result | Detect incomplete extraction | Extraction completes without interruption |
-| Foreign Key Availability | Relationship columns | Verify relationships can be maintained | Required foreign-key values are present |
-| Extraction Error Check | Extraction process | Detect failures or interruptions | No unhandled extraction error |
-| Extraction Status | Pipeline run | Determine result of extraction | Status is recorded as PASS, WARNING, or FAIL |
+- Source connection check.
+- Required table/file existence.
+- Required column presence.
+- Primary-key blank checks.
+- Primary-key duplicate checks.
+- Record counts per table.
+- Date parseability for configured date columns.
+- Foreign-key relationship checks.
+- Extraction status and log generation.
 
-## 3.2 Validation Result Categories
+Validation result categories:
 
-### PASS
-
-All critical extraction requirements are satisfied.
-
-### WARNING
-
-The extraction completed, but a non-critical condition requires review.
-
-### FAIL
-
-A critical extraction requirement was not satisfied.
-
-Examples of critical failures include:
-
-- PostgreSQL connection failure
-- Required table missing
-- Required column missing
-- Extraction interruption
-- Critical identifier unavailable
+- **PASS** — critical extraction requirements are satisfied.
+- **WARNING** — extraction completed but a non-critical condition needs review.
+- **FAIL** — a critical requirement failed.
 
 ---
 
-# 4. Extraction Metadata and Log Specification
+# 5. Command Procedure
 
-Each extraction run must generate metadata that allows the team to monitor, troubleshoot, audit, and recover the pipeline.
+## 5.1 Windows setup
 
-| Metadata Field | Purpose | Example |
-|---|---|---|
-| `pipeline_run_id` | Unique identifier for the extraction run | `VB-20260930-001` |
-| `table_name` | Identifies the extracted table | `visitor_reports` |
-| `extraction_start_timestamp` | Records when extraction started | `2026-09-30 01:00:00` |
-| `extraction_end_timestamp` | Records when extraction ended | `2026-09-30 01:02:14` |
-| `extraction_status` | Indicates extraction result | `SUCCESS` |
-| `records_read` | Number of records read from source | `1250` |
-| `records_extracted` | Number of records successfully extracted | `1250` |
-| `records_rejected` | Number of records rejected during extraction validation | `0` |
-| `extraction_window` | Identifies the extraction range | `2026-09-29 to 2026-09-30` |
-| `validation_result` | Records validation outcome | `PASS` |
-| `error_message` | Records extraction error when applicable | `NULL` |
-| `error_code` | Identifies the extraction error | `NULL` |
-| `extraction_duration` | Measures execution time | `00:02:14` |
+```powershell
+cd C:\Users\banco\VistaBalayan_ETL_Pipeline
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+py -m pip install -r requirements.txt
+```
 
-## 4.1 Use of Metadata and Logs
+If using direct Supabase extraction, create `.env` from the template:
 
-The metadata and logs will be used for:
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
 
-- **Monitoring** — determine whether scheduled extraction runs completed successfully.
-- **Troubleshooting** — identify the affected table, run, timestamp, or error.
-- **Auditing** — maintain a historical record of extraction activities.
-- **Recovery** — identify incomplete or failed runs that require retry.
-- **Validation** — compare extraction counts and validation results between runs.
+Do not commit `.env`.
+
+## 5.2 Test source connection
+
+```powershell
+py main.py test-connection
+```
+
+This uses `src/database.py` and reads connection values from `.env`.
+
+## 5.3 Extract all four source tables to CSV
+
+```powershell
+py main.py extract-csv
+```
+
+Expected CSV outputs:
+
+- `data/raw/establishments.csv`
+- `data/raw/visitor_reports.csv`
+- `data/raw/accommodation_reports.csv`
+- `data/raw/room_occupancy_details.csv`
+
+## 5.4 Build local SQLite staging database
+
+If CSV files already exist in `data/raw/`, run:
+
+```powershell
+py main.py build-sqlite
+```
+
+This writes:
+
+```text
+data/processed/vistabalayan_staging.sqlite
+```
+
+The direct script still works:
+
+```powershell
+py scripts\extract_to_sqlite.py
+```
+
+## 5.5 Validate metadata and relationships
+
+```powershell
+py main.py validate
+```
+
+The direct script still works:
+
+```powershell
+py scripts\validate_metadata.py
+```
+
+## 5.6 Run full direct pipeline
+
+When `.env` has valid Supabase values:
+
+```powershell
+py main.py all
+```
 
 ---
+
+# 6. Recorded Local Extraction Result
+
+The user's successful local extraction produced:
+
+```json
+{
+  "overall_status": "PASS",
+  "sqlite_output": "C:\\Users\\banco\\VistaBalayan_ETL_Pipeline\\data\\processed\\vistabalayan_staging.sqlite",
+  "tables": {
+    "establishments": 38,
+    "visitor_reports": 2397,
+    "accommodation_reports": 1857,
+    "room_occupancy_details": 5938
+  }
+}
+```
+
+This confirms that the local CSV-to-SQLite extraction step successfully loaded all four Issue #3 tables.
+
+---
+
+# 7. Test Results
+
+Repository test command:
+
+```powershell
+py -m pytest -q
+```
+
+Verified result after adding Issue #3 structure:
+
+```text
+8 passed in 2.72s
+```
+
+Additional command verification:
+
+```text
+python3 main.py --help
+```
+
+The command lists these subcommands:
+
+- `test-connection`
+- `extract-csv`
+- `build-sqlite`
+- `validate`
+- `all`
+
+---
+
+# 8. Sensitive Data Review
+
+The repository excludes:
+
+- `.env`
+- `.env.*` except `.env.example`
+- `.venv/` and `venv/`
+- `__pycache__/`
+- `.pytest_cache/`
+- `data/raw/*.csv`
+- `data/processed/*.sqlite`
+- `data/processed/*.db`
+- `logs/*.json`
+- `logs/*.log`
+
+Only code, configuration templates, documentation, and tests should be committed.

@@ -2,83 +2,130 @@
 
 ## Overview
 
-The **VistaBalayan Tourism Data Analytics and Decision Support Pipeline** is designed to collect, extract, validate, transform, process, and analyze tourism data from the VistaBalayan Tourism System.
+This repository implements the **VistaBalayan Data Extraction Pipeline** for ETL/Lab 2 work.
 
-The pipeline processes tourism records such as **establishment information, visitor reports, accommodation reports, and room occupancy details**. The source data is stored in the VistaBalayan **PostgreSQL database**, while **Python** is used to retrieve tourism records for batch processing.
-
-The pipeline is organized into several stages:
-
-```text
-VistaBalayan Tourism System
-          |
-          v
-   PostgreSQL Database
-          |
-          v
-   1. Data Extraction
-          |
-          v
-   2. Data Transformation
-          |
-          v
-   3. Data Processing / Storage
-          |
-          v
-   4. Data Analytics
-          |
-          v
-   5. Reporting and Decision Support
-```
-
-> **Current Progress:** The project is currently at **Stage 1: Data Extraction**. The current work focuses on retrieving tourism records from the VistaBalayan PostgreSQL database and validating the extracted data before it proceeds to the succeeding stages.
-
----
-
-## Pipeline Stages
-
-### Stage 1 — Data Extraction
-
-The Data Extraction stage retrieves tourism records from the VistaBalayan PostgreSQL database using Python batch processing.
-
-The current extraction scope includes:
+The current milestone is **Stage 1: Data Extraction**. The pipeline extracts these four VistaBalayan tables:
 
 - `establishments`
 - `visitor_reports`
 - `accommodation_reports`
 - `room_occupancy_details`
 
-The extracted data undergoes initial validation to verify the source connection, required tables and columns, identifiers, relationships, record counts, and extraction status.
+The issue-required structure is included:
 
-**Status:** 🟡 In Progress
+- `src/database.py` — connection loading and Supabase/PostgREST connection test.
+- `src/extract.py` — batch extraction to CSV files.
+- `main.py` — command-line pipeline runner.
+- `requirements.txt` — Python/test dependencies.
+- `.env.example` — local secret template.
+- `documentation/data-extraction.md` — procedures and test results.
 
-**Documentation:** `documentation/data-extraction.md`
-
----
-
-### Stage 2 — Data Transformation
-
-The Data Transformation stage will process the extracted tourism data and prepare it for succeeding analytical operations.
-
-Planned activities include:
-
-- Data cleaning
-- Data standardization
-- Data type handling
-- Data integration
-- Data aggregation
-- Validation of transformed records
-
-**Status:** ⚪ Not Yet Started
+Generated CSV files, logs, SQLite files, and `.env` are ignored by Git.
 
 ---
 
-### Stage 3 — Data Processing / Storage
+## Windows setup
 
-The Data Processing / Storage stage will organize and store the transformed tourism data in the designated processed-data layer for succeeding analytics and reporting activities.
+```powershell
+cd C:\Users\banco\VistaBalayan_ETL_Pipeline
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+py -m pip install -r requirements.txt
+```
 
-The specific processing and storage procedures will be documented as the pipeline progresses.
+If you are extracting directly from Supabase, create a private `.env` file:
 
-**Status:** ⚪ Not Yet Started
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
 
+Do not commit `.env`.
 
-### Stage 4 —
+---
+
+## Main commands
+
+### Test Supabase connection
+
+```powershell
+py main.py test-connection
+```
+
+### Extract four source tables to CSV
+
+```powershell
+py main.py extract-csv
+```
+
+This creates:
+
+```text
+data/raw/establishments.csv
+data/raw/visitor_reports.csv
+data/raw/accommodation_reports.csv
+data/raw/room_occupancy_details.csv
+```
+
+### Build SQLite staging database from CSV exports
+
+```powershell
+py main.py build-sqlite
+```
+
+This creates:
+
+```text
+data/processed/vistabalayan_staging.sqlite
+```
+
+The direct script also works:
+
+```powershell
+py scripts\extract_to_sqlite.py
+```
+
+### Validate metadata and relationships
+
+```powershell
+py main.py validate
+```
+
+The direct script also works:
+
+```powershell
+py scripts\validate_metadata.py
+```
+
+### Full direct pipeline
+
+When `.env` is configured with valid Supabase values:
+
+```powershell
+py main.py all
+```
+
+---
+
+## Local extraction result already verified
+
+The current local CSV-to-SQLite extraction passed with these counts:
+
+- `establishments`: 38
+- `visitor_reports`: 2,397
+- `accommodation_reports`: 1,857
+- `room_occupancy_details`: 5,938
+
+---
+
+## Tests
+
+```powershell
+py -m pytest -q
+```
+
+Verified result:
+
+```text
+8 passed in 2.72s
+```
