@@ -50,6 +50,34 @@ def test_extracts_csv_exports_to_sqlite_and_validates_relationships(tmp_path):
     assert Path(result["log_path"]).exists()
 
 
+def test_reads_large_supabase_csv_fields(tmp_path):
+    raw = tmp_path / "raw"
+    out = tmp_path / "processed" / "staging.sqlite"
+    logs = tmp_path / "logs"
+    config = ROOT / "config" / "pipeline_config.json"
+    large_text = "x" * 200_000
+
+    write_csv(raw / "establishments.csv", [
+        {"id": "est-1", "name": "Balayan Beach Resort", "type": "Resort", "status": "active", "description": large_text},
+    ])
+    write_csv(raw / "visitor_reports.csv", [
+        {"id": "vis-1", "establishment_id": "est-1", "report_date": "2026-10-01", "status": "approved"},
+    ])
+    write_csv(raw / "accommodation_reports.csv", [
+        {"id": "acc-1", "establishment_id": "est-1", "report_date": "2026-10-01", "status": "approved"},
+    ])
+    write_csv(raw / "room_occupancy_details.csv", [
+        {"id": "room-1", "accommodation_report_id": "acc-1"},
+    ])
+
+    result = extract_to_sqlite.run(config, raw, out, logs)
+
+    assert result["overall_status"] == "PASS"
+    with sqlite3.connect(out) as conn:
+        saved = conn.execute("select description from establishments").fetchone()[0]
+    assert saved == large_text
+
+
 def test_fails_when_child_report_references_missing_establishment(tmp_path):
     raw = tmp_path / "raw"
     out = tmp_path / "processed" / "staging.sqlite"

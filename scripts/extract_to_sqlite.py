@@ -12,9 +12,24 @@ import argparse
 import csv
 import json
 import sqlite3
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+
+def increase_csv_field_limit() -> None:
+    """Allow large Supabase CSV fields such as long descriptions, image data, or JSON blobs."""
+    limit = sys.maxsize
+    while True:
+        try:
+            csv.field_size_limit(limit)
+            return
+        except OverflowError:
+            limit = limit // 10
+
+
+increase_csv_field_limit()
 
 
 def utc_now() -> str:
