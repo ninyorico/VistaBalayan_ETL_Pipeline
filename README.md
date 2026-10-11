@@ -24,7 +24,7 @@ Supporting Stage 1 files:
 - `pipeline/pipeline_config.json` — table/file/relationship configuration.
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — local secret template.
-- `docs/extraction/data-extraction.md` — procedures and validation results.
+- `docs/extraction/stage-1-extraction-guide.md` — Stage 1 extraction procedures and validation results.
 
 Generated CSV files, logs, SQLite files, and `.env` are ignored by Git.
 
