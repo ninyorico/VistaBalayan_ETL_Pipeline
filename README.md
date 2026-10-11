@@ -1,16 +1,70 @@
-# VistaBalayan ETL Pipeline
+# VistaBalayan Tourism Data Analytics and Decision Support Pipeline
 
-Minimal **Stage 1 Data Extraction** project for VistaBalayan.
+## Overview
 
-This version only keeps the files needed for the current workflow:
+This repository implements the **VistaBalayan Data Extraction Pipeline** for ETL/Lab 2 work.
 
-```text
-CSV exports → SQLite staging database → metadata/relationship validation
+The current milestone is **Stage 1: Data Extraction**. The pipeline extracts these four VistaBalayan tables:
+
+- `establishments`
+- `visitor_reports`
+- `accommodation_reports`
+- `room_occupancy_details`
+
+Important Stage 1 code files:
+
+- `src/database.py` — connection loading and Supabase/PostgREST connection test.
+- `src/extract.py` — batch extraction to CSV files.
+- `main.py` — command-line pipeline runner.
+- `src/staging.py` — CSV-to-SQLite staging builder.
+- `src/validate.py` — metadata and relationship validator.
+
+Supporting Stage 1 files:
+
+- `config/pipeline_config.json` — table/file/relationship configuration.
+- `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
+- `.env.example` — local secret template.
+- `documentation/data-extraction.md` — procedures and validation results.
+
+Generated CSV files, logs, SQLite files, and `.env` are ignored by Git.
+
+---
+
+## Windows setup
+
+```powershell
+cd C:\Users\banco\VistaBalayan_ETL_Pipeline
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+py -m pip install -r requirements.txt
 ```
 
-## Required CSV files
+If you are extracting directly from Supabase, create a private `.env` file:
 
-Place these exported Supabase CSV files in `data/raw/`:
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
+
+Do not commit `.env`.
+
+---
+
+## Main commands
+
+### Test Supabase connection
+
+```powershell
+py main.py test-connection
+```
+
+### Extract four source tables to CSV
+
+```powershell
+py main.py extract-csv
+```
+
+This creates:
 
 ```text
 data/raw/establishments.csv
@@ -19,49 +73,49 @@ data/raw/accommodation_reports.csv
 data/raw/room_occupancy_details.csv
 ```
 
-The `data/raw/`, `data/processed/`, and `logs/` folders do not need to be committed. The program creates output folders when needed.
-
-## Project files
-
-```text
-main.py
-README.md
-.gitignore
-config/pipeline_config.json
-src/staging.py
-src/validate.py
-```
-
-## Run on Windows PowerShell
-
-Build the SQLite staging database:
+### Build SQLite staging database from CSV exports
 
 ```powershell
 py main.py build-sqlite
 ```
 
-Validate the SQLite database:
+This creates:
+
+```text
+data/processed/vistabalayan_staging.sqlite
+```
+
+### Validate metadata and relationships
 
 ```powershell
 py main.py validate
 ```
 
-## Outputs
+### Full direct pipeline
 
-```text
-data/processed/vistabalayan_staging.sqlite
-logs/extraction_run_YYYYMMDD_HHMMSS.json
-logs/metadata_validation_YYYYMMDD_HHMMSS.json
+When `.env` is configured with valid Supabase values:
+
+```powershell
+py main.py all
 ```
 
-## Verified result
+---
 
-The local Stage 1 extraction and validation previously passed with:
+## Local extraction result already verified
+
+The current local CSV-to-SQLite extraction passed with these counts:
+
+- `establishments`: 38
+- `visitor_reports`: 2,397
+- `accommodation_reports`: 1,857
+- `room_occupancy_details`: 5,938
+
+---
+
+## Validation
+
+The latest local validation passed with:
 
 ```text
 overall_status: PASS
-establishments: 38
-visitor_reports: 2397
-accommodation_reports: 1857
-room_occupancy_details: 5938
 ```
