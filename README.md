@@ -75,7 +75,7 @@ py main.py test-connection
 py main.py extract-csv
 ```
 
-This creates:
+The `pipeline/raw/` folder is included in the repository with a `.gitkeep` placeholder. Put or generate CSV files there:
 
 ```text
 pipeline/raw/establishments.csv
@@ -83,6 +83,8 @@ pipeline/raw/visitor_reports.csv
 pipeline/raw/accommodation_reports.csv
 pipeline/raw/room_occupancy_details.csv
 ```
+
+The CSV files are local data files and are ignored by Git.
 
 ### Build SQLite staging database from CSV exports
 

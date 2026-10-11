@@ -254,12 +254,14 @@ This uses `pipeline/database.py` and reads connection values from `.env`.
 py main.py extract-csv
 ```
 
-Expected CSV outputs:
+Expected CSV outputs inside the tracked placeholder folder `pipeline/raw/`:
 
 - `pipeline/raw/establishments.csv`
 - `pipeline/raw/visitor_reports.csv`
 - `pipeline/raw/accommodation_reports.csv`
 - `pipeline/raw/room_occupancy_details.csv`
+
+The `.gitkeep` file keeps the folder visible in GitHub; the actual CSV files remain ignored by Git.
 
 ## 5.4 Build local SQLite staging database
 

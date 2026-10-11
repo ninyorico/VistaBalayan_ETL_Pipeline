@@ -11,12 +11,14 @@ venv/
 !.env.example
 
 # Local ETL data outputs
-/pipeline/raw/
-/pipeline/processed/
+/pipeline/raw/*
+/pipeline/processed/*
 /logs/*.json
 /logs/*.log
 
 # Keep directory placeholders
+!/pipeline/raw/.gitkeep
+!/pipeline/processed/.gitkeep
 !/logs/.gitkeep
 
 # OS/editor
