@@ -1,1 +1,2 @@
-pytest>=8.0
+# Stage 1 extraction uses Python standard-library modules only.
+# Keep this file for setup compatibility.

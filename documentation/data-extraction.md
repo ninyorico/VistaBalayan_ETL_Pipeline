@@ -25,10 +25,10 @@ This repository focuses on **Stage 1: Data Extraction** only.
 Supporting files for setup, documentation, and safe repository use:
 
 - `config/pipeline_config.json` — Stage 1 table/file/relationship configuration.
-- `requirements.txt` — Python/test dependencies.
+- `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — template for private local connection values.
 - `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
-- `documentation/data-extraction.md` — Stage 1 extraction procedure and test results.
+- `documentation/data-extraction.md` — Stage 1 extraction procedure and validation results.
 
 ## 1.2 Stage 1 checklist mapping
 
@@ -43,7 +43,7 @@ Supporting files for setup, documentation, and safe repository use:
 - Check CSV files, record counts, columns, and relationships: SQLite build and metadata validation scripts perform these checks.
 - Fix discrepancies: validation output lists `failed_checks` and `warning_checks` for correction.
 - Create `documentation/data-extraction.md`: this file documents the extraction procedure.
-- Record procedures and test results: see Sections 6 and 7.
+- Record procedures and validation results: see Sections 6 and 7.
 - Review files and exclude sensitive data: `.gitignore` excludes secrets and generated data.
 - Commit and push the Stage 1 extraction implementation.
 
@@ -315,33 +315,32 @@ This confirms that the local CSV-to-SQLite extraction step successfully loaded a
 
 ---
 
-# 7. Test Results
+# 7. Validation Results
 
-Repository test command:
-
-```powershell
-py -m pytest -q
-```
-
-Verified result after adding the Stage 1 code structure:
+The local Stage 1 metadata validation completed successfully:
 
 ```text
-8 passed in 2.72s
+overall_status: PASS
 ```
 
-Additional command verification:
+Validated table counts:
+
+- `establishments`: 38
+- `visitor_reports`: 2,397
+- `accommodation_reports`: 1,857
+- `room_occupancy_details`: 5,938
+
+Relationship checks passed with `missing_parent_count: 0` for:
+
+- `visitor_reports.establishment_id` → `establishments.id`
+- `accommodation_reports.establishment_id` → `establishments.id`
+- `room_occupancy_details.accommodation_report_id` → `accommodation_reports.id`
+
+The command entry point was also checked with:
 
 ```text
 python3 main.py --help
 ```
-
-The command lists these subcommands:
-
-- `test-connection`
-- `extract-csv`
-- `build-sqlite`
-- `validate`
-- `all`
 
 ---
 
@@ -360,4 +359,4 @@ The repository excludes:
 - `logs/*.json`
 - `logs/*.log`
 
-Only code, configuration templates, documentation, and tests should be committed.
+Only Stage 1 code, configuration templates, and documentation should be committed.

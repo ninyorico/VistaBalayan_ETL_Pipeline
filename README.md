@@ -22,9 +22,9 @@ Important Stage 1 code files:
 Supporting Stage 1 files:
 
 - `config/pipeline_config.json` — table/file/relationship configuration.
-- `requirements.txt` — Python/test dependencies.
+- `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — local secret template.
-- `documentation/data-extraction.md` — procedures and test results.
+- `documentation/data-extraction.md` — procedures and validation results.
 
 Generated CSV files, logs, SQLite files, and `.env` are ignored by Git.
 
@@ -124,14 +124,10 @@ The current local CSV-to-SQLite extraction passed with these counts:
 
 ---
 
-## Tests
+## Validation
 
-```powershell
-py -m pytest -q
-```
-
-Verified result:
+The latest local validation passed with:
 
 ```text
-8 passed in 2.72s
+overall_status: PASS
 ```
