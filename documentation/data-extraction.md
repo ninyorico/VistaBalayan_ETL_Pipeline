@@ -84,7 +84,7 @@ PostgreSQL/Supabase is used as the primary database for structured tourism infor
 
 **Extraction Tool:** Python
 
-Python retrieves tourism records from the source system in batches and saves the extracted tables as CSV files.
+Python retrieves tourism records from the source system in batches and saves the extracted tables as CSV files. The current implementation uses ordered `limit`/`offset` batches through Supabase PostgREST. It is a repeatable batch extraction, but it is not yet a watermark-based incremental extraction.
 
 ```text
 VistaBalayan PostgreSQL/Supabase
@@ -110,7 +110,7 @@ VistaBalayan PostgreSQL/Supabase
 
 ## 2.4 Extraction Schedule
 
-The pipeline is designed for daily batch processing, with weekly or monthly aggregation when required. Manual Lab 2 runs are executed from the command line.
+The pipeline is designed for daily batch processing, with weekly or monthly aggregation when required. Manual Lab 2 runs are executed from the command line. Scheduling is operational guidance; this repository does not currently include a scheduler.
 
 ## 2.5 Extraction Scope
 
@@ -130,6 +130,7 @@ The extraction includes these source tables:
 5. Generated raw CSV files, logs, SQLite files, and credentials are excluded from Git.
 6. Unexpected database schema changes may cause extraction validation to fail.
 7. Database connectivity problems may interrupt direct Supabase extraction.
+8. A watermark field and last-successful-run state have not yet been implemented; each direct extraction currently reads the configured tables from the beginning in ordered batches.
 
 ---
 
@@ -310,3 +311,19 @@ The repository excludes:
 - `documentation/logs/*.log`
 
 Only Stage 1 code, configuration templates, and documentation should be committed.
+
+---
+
+# 7. Stage 1 Acceptance Gate
+
+Stage 1 remains **IN PROGRESS** until a fresh direct extraction or a supplied raw CSV package has been processed successfully. A historical result in `documentation/extraction-results.md` is reference evidence only and is not a new validation run.
+
+The handover decision is **APPROVED FOR TRANSFORMATION** only when:
+
+- all four source tables are available;
+- required columns and identifiers pass validation;
+- primary-key and foreign-key checks pass;
+- record counts are recorded for the current run; and
+- the current run's validation output is recorded in `documentation/extraction-results.md`.
+
+No cleaning, standardization, aggregation, or business transformation is performed in Stage 1.

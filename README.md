@@ -29,6 +29,8 @@ Supporting Stage 1 files:
 
 Generated CSV files, documentation logs, and SQLite files are ignored by Git.
 
+**Stage 1 status:** In progress. The repository contains the extraction and validation implementation, but Stage 1 is not marked approved until a fresh extraction or a supplied raw CSV package is validated successfully.
+
 ---
 
 ## Windows setup / daily start

@@ -6,9 +6,9 @@ This file records the local Stage 1 extraction and validation results separately
 
 ---
 
-# 1. Recorded Local Extraction Result
+# 1. Recorded Historical Local Extraction Result
 
-The user's successful local extraction produced:
+The following numbers are a historical local result recorded before the current clean checkout. They document the last known successful CSV-to-SQLite run, but the raw CSV inputs and source-run metadata are not committed to this repository:
 
 ```json
 {
@@ -23,11 +23,11 @@ The user's successful local extraction produced:
 }
 ```
 
-This confirms that the local CSV-to-SQLite extraction step successfully loaded all four Stage 1 source tables.
+This confirms that the earlier local CSV-to-SQLite extraction step loaded all four Stage 1 source tables. It does not by itself approve the current checkout for Transformation.
 
 ---
 
-# 2. Validation Results
+# 2. Historical Validation Results
 
 The local Stage 1 metadata validation completed successfully:
 
@@ -52,4 +52,20 @@ The command entry point was also checked with:
 
 ```text
 python3 main.py --help
+```
+
+---
+
+# 3. Current Checkout Status
+
+The current repository intentionally excludes raw CSV exports, generated SQLite files, and operational JSON logs. Therefore, a fresh Stage 1 validation cannot be reproduced from Git alone until one of the following is supplied locally:
+
+- a new direct Supabase extraction using a private `.env`; or
+- the four raw CSV exports placed in `pipeline/raw/`.
+
+Until that run completes and its output is recorded here, the current decision remains:
+
+```text
+Stage 1: IN PROGRESS
+Transformation handover: NOT APPROVED
 ```
