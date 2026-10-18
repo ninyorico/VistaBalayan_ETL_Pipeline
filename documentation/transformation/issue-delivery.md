@@ -14,3 +14,10 @@ The Stage 2 implementation is delivered through the issue-linked commits listed 
 - Parses report dates into ISO format and adds report year/month metadata.
 - Converts only known numeric measures, preserving text fields such as `guest_name`, `guest_group_name`, `room_code`, and `room_type`.
 - The explicit numeric-field correction is included in commit `f2315f4`.
+
+## Issue #5 — Transformed VistaBalayan datasets
+
+- Produces transformed CSV files for establishments, visitor reports, accommodation reports, and room occupancy details.
+- Preserves source identifiers and relationship keys.
+- Writes output to the ignored `pipeline/transformed/` runtime directory.
+- Validated with the clean fixture and confirmed all four transformed datasets were produced.
