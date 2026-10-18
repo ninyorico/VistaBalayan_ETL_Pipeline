@@ -23,13 +23,16 @@ Supporting Stage 1 files:
 
 - `pipeline/pipeline_config.json` — table/file/relationship configuration.
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
-- `documentation/data-extraction.md` — Stage 1 extraction guide and command procedure.
-- `documentation/extraction-results.md` — recorded local extraction and validation results.
-- `documentation/logs/` — local generated JSON/log output folder.
+- `documentation/extraction/data-extraction.md` — Stage 1 extraction guide and command procedure.
+- `documentation/extraction/extraction-results.md` — recorded local extraction and validation results.
+- `documentation/extraction/logs/` — local generated extraction JSON/log output folder.
+- `documentation/transformation/data-transformation.md` — Stage 2 transformation specification.
 
 Generated CSV files, documentation logs, and SQLite files are ignored by Git.
 
-**Stage 1 status:** In progress. The repository contains the extraction and validation implementation, but Stage 1 is not marked approved until a fresh extraction or a supplied raw CSV package is validated successfully.
+**Stage 1 status:** Completed and approved for transformation based on the verified real-data extraction, staging, and validation run documented in `documentation/extraction/extraction-results.md`.
+
+**Stage 2 status:** Documentation defined; implementation not started.
 
 ---
 
@@ -93,5 +96,5 @@ py main.py validate
 The recorded extraction and validation outputs are kept separately from the guide:
 
 ```text
-documentation/extraction-results.md
+documentation/extraction/extraction-results.md
 ```

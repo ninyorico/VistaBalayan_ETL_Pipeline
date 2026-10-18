@@ -28,9 +28,9 @@ Supporting files for setup, documentation, and safe repository use:
 - `requirements.txt` — setup compatibility file; Stage 1 code uses Python standard library only.
 - `.env.example` — template for private local connection values.
 - `.gitignore` — excludes `.env`, virtual environments, logs, raw CSV exports, and generated SQLite files.
-- `documentation/data-extraction.md` — Stage 1 extraction guide and command procedure.
-- `documentation/extraction-results.md` — recorded local extraction and validation results.
-- `documentation/logs/` — local generated JSON/log output folder.
+- `documentation/extraction/data-extraction.md` — Stage 1 extraction guide and command procedure.
+- `documentation/extraction/extraction-results.md` — recorded local extraction and validation results.
+- `documentation/extraction/logs/` — local generated extraction JSON/log output folder.
 
 ## 1.2 Stage 1 checklist mapping
 
@@ -41,11 +41,11 @@ Supporting files for setup, documentation, and safe repository use:
 - Create `pipeline/extract.py`: implemented with batch CSV export helpers.
 - Extract all four tables in batches and save as CSV files: `main.py extract-csv` exports the four configured tables.
 - Configure `main.py`: implemented with subcommands.
-- Run extraction and handle errors: extraction logs table-level failures in `documentation/logs/csv_extraction_*.json`.
+- Run extraction and handle errors: extraction logs table-level failures in `documentation/extraction/logs/csv_extraction_*.json`.
 - Check CSV files, record counts, columns, and relationships: SQLite build and metadata validation commands perform these checks.
 - Fix discrepancies: validation output lists `failed_checks` and `warning_checks` for correction.
-- Create `documentation/data-extraction.md`: this file documents the extraction procedure.
-- Record extraction and validation results separately in `documentation/extraction-results.md`.
+- Create `documentation/extraction/data-extraction.md`: this file documents the extraction procedure.
+- Record extraction and validation results separately in `documentation/extraction/extraction-results.md`.
 - Review files and exclude sensitive data: `.gitignore` excludes secrets and generated data.
 - Commit and push the Stage 1 extraction implementation.
 
@@ -307,8 +307,8 @@ The repository excludes:
 - `.pytest_cache/`
 - `pipeline/raw/*` except `pipeline/raw/.gitkeep`
 - `pipeline/processed/*` except `pipeline/processed/.gitkeep`
-- `documentation/logs/*.json`
-- `documentation/logs/*.log`
+- `documentation/extraction/logs/*.json`
+- `documentation/extraction/logs/*.log`
 
 Only Stage 1 code, configuration templates, and documentation should be committed.
 
@@ -316,7 +316,7 @@ Only Stage 1 code, configuration templates, and documentation should be committe
 
 # 7. Stage 1 Acceptance Gate
 
-Stage 1 remains **IN PROGRESS** until a fresh direct extraction or a supplied raw CSV package has been processed successfully. A historical result in `documentation/extraction-results.md` is reference evidence only and is not a new validation run.
+Stage 1 is **COMPLETED** and **APPROVED FOR TRANSFORMATION** based on the verified real-data extraction, SQLite staging build, and metadata/relationship validation recorded in `documentation/extraction/extraction-results.md`. Stage 2 transformation implementation has not started.
 
 The handover decision is **APPROVED FOR TRANSFORMATION** only when:
 
@@ -324,6 +324,6 @@ The handover decision is **APPROVED FOR TRANSFORMATION** only when:
 - required columns and identifiers pass validation;
 - primary-key and foreign-key checks pass;
 - record counts are recorded for the current run; and
-- the current run's validation output is recorded in `documentation/extraction-results.md`.
+- the current run's validation output is recorded in `documentation/extraction/extraction-results.md`.
 
 No cleaning, standardization, aggregation, or business transformation is performed in Stage 1.
