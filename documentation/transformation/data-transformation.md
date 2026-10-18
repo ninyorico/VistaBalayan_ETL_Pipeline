@@ -415,4 +415,14 @@ Stage 2 is complete only when the transformation implementation and its document
 7. An `APPROVED`, `MANUAL REVIEW`, or `REJECTED` decision.
 8. A load handover package without loading records into the target database.
 
-The Stage 2 implementation remains **not started** until the project issues approve the rules and the actual Stage 1 handover is profiled. No profiling counts are fabricated in this specification; they must be populated from the real handover during execution.
+The Stage 2 implementation now provides a local `transform` command. It consumes the Stage 1 SQLite handover when available, otherwise the four local CSV files, and writes generated outputs to `pipeline/transformed/`. It does not connect to Supabase or load a target database.
+
+```powershell
+py main.py transform
+```
+
+The command writes four standardized CSV outputs, `transformation_quarantine.csv`, and a safe JSON run log. Use `--run-id` to reproduce a named run and `--transform-output`/`--log-dir` to select local destinations. Generated outputs and logs are ignored by Git. A fixture run verified profiling, trimming, date normalization, lineage checks, quarantine accounting, reconciliation, and referential integrity with an overall `PASS` result.
+
+The implementation remains intentionally conservative: source identifiers are preserved, unknown categories are not invented, invalid required values are quarantined, and the target database Load stage is not performed.
+
+The Stage 2 implementation is now available locally; real-data profiling and acceptance must still be run against the approved Stage 1 handover before Load approval.

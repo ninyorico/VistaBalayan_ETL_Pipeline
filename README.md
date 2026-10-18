@@ -32,7 +32,7 @@ Generated CSV files, documentation logs, and SQLite files are ignored by Git.
 
 **Stage 1 status:** Completed and approved for transformation based on the verified real-data extraction, staging, and validation run documented in `documentation/extraction/extraction-results.md`.
 
-**Stage 2 status:** Documentation defined; implementation not started.
+**Stage 2 status:** Implementation available through `py main.py transform`; real-data profiling and acceptance are pending before Load approval.
 
 ---
 

@@ -18,6 +18,7 @@ from pipeline.database import DEFAULT_TABLES, create_client
 from pipeline.extract import export_all_tables
 from pipeline.staging import run as build_sqlite
 from pipeline.validate import validate_sqlite
+from pipeline.transform import run as transform_stage
 
 
 def command_test_connection(args: argparse.Namespace) -> dict:
@@ -43,6 +44,16 @@ def command_build_sqlite(args: argparse.Namespace) -> dict:
 
 def command_validate(args: argparse.Namespace) -> dict:
     return validate_sqlite(args.config, sqlite_path=args.sqlite_output, log_dir=args.log_dir)
+
+
+def command_transform(args: argparse.Namespace) -> dict:
+    return transform_stage(
+        sqlite_path=args.sqlite_output,
+        raw_dir=args.raw_dir,
+        output_dir=args.transform_output,
+        log_dir=args.log_dir,
+        run_id=args.run_id,
+    )
 
 
 def command_all(args: argparse.Namespace) -> dict:
@@ -73,7 +84,7 @@ def add_common_paths(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--config", default=Path("pipeline/pipeline_config.json"), type=Path)
     parser.add_argument("--raw-dir", default=Path("pipeline/raw"), type=Path)
     parser.add_argument("--sqlite-output", default=Path("pipeline/processed/vistabalayan_staging.sqlite"), type=Path)
-    parser.add_argument("--log-dir", default=Path("documentation/logs"), type=Path)
+    parser.add_argument("--log-dir", default=Path("documentation/extraction/logs"), type=Path)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -88,7 +99,7 @@ def build_parser() -> argparse.ArgumentParser:
     extract_parser = subparsers.add_parser("extract-csv", help="Extract Supabase tables to pipeline/raw CSV files")
     extract_parser.add_argument("--env", default=Path(".env"), type=Path)
     extract_parser.add_argument("--output-dir", default=Path("pipeline/raw"), type=Path)
-    extract_parser.add_argument("--log-dir", default=Path("documentation/logs"), type=Path)
+    extract_parser.add_argument("--log-dir", default=Path("documentation/extraction/logs"), type=Path)
     extract_parser.add_argument("--batch-size", type=int)
     extract_parser.add_argument("--tables", nargs="*")
     extract_parser.set_defaults(func=command_extract_csv)
@@ -100,6 +111,12 @@ def build_parser() -> argparse.ArgumentParser:
     validate_parser = subparsers.add_parser("validate", help="Validate SQLite metadata and relationships")
     add_common_paths(validate_parser)
     validate_parser.set_defaults(func=command_validate)
+
+    transform_parser = subparsers.add_parser("transform", help="Transform the local Stage 1 handover")
+    add_common_paths(transform_parser)
+    transform_parser.add_argument("--transform-output", default=Path("pipeline/transformed"), type=Path)
+    transform_parser.add_argument("--run-id")
+    transform_parser.set_defaults(func=command_transform)
 
     all_parser = subparsers.add_parser("all", help="Run test/extract/build/validate pipeline")
     all_parser.add_argument("--env", default=Path(".env"), type=Path)

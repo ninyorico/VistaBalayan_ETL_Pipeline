@@ -13,13 +13,18 @@ venv/
 # Local ETL data outputs
 /pipeline/raw/*
 /pipeline/processed/*
+/pipeline/transformed/*
 /documentation/extraction/logs/*.json
 /documentation/extraction/logs/*.log
+/documentation/transformation/logs/*.json
+/documentation/transformation/logs/*.log
 
 # Keep directory placeholders
 !/pipeline/raw/.gitkeep
 !/pipeline/processed/.gitkeep
+!/pipeline/transformed/.gitkeep
 !/documentation/extraction/logs/.gitkeep
+!/documentation/transformation/logs/.gitkeep
 
 # OS/editor
 .DS_Store
