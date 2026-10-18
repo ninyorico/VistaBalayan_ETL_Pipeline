@@ -21,3 +21,10 @@ The Stage 2 implementation is delivered through the issue-linked commits listed 
 - Preserves source identifiers and relationship keys.
 - Writes output to the ignored `pipeline/transformed/` runtime directory.
 - Validated with the clean fixture and confirmed all four transformed datasets were produced.
+
+## Issue #6 — Quarantine and transformation validation
+
+- Writes `transformation_quarantine.csv` with run ID, batch ID, source dataset, source key, rule ID, and reason.
+- Validates reconciliation, primary-key uniqueness, required fields, referential integrity, quarantine accounting, and rejection rate.
+- Clean fixture result: `PASS`, zero rejected records.
+- Invalid fixture result: `WARNING`, one quarantined record, manual review exit code `1`.
