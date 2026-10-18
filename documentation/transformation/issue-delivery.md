@@ -28,3 +28,10 @@ The Stage 2 implementation is delivered through the issue-linked commits listed 
 - Validates reconciliation, primary-key uniqueness, required fields, referential integrity, quarantine accounting, and rejection rate.
 - Clean fixture result: `PASS`, zero rejected records.
 - Invalid fixture result: `WARNING`, one quarantined record, manual review exit code `1`.
+
+## Issue #7 — CLI, handover package, and verification documentation
+
+- Provides the `py main.py transform` entry point for the local Stage 1 handover.
+- Reads the approved SQLite handover first and falls back to the four local CSV files.
+- Writes transformation logs under `documentation/transformation/logs/` while keeping generated runtime data ignored.
+- The implementation and verification workflow are documented in `documentation/transformation/data-transformation.md`.
