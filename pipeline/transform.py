@@ -62,8 +62,42 @@ def parse_date(value: Any) -> str | None:
     return None
 
 
+NUMERIC_FIELDS = {
+    # Visitor-report measures.
+    "female_visitors",
+    "male_visitors",
+    "total_female",
+    "total_guests",
+    "total_male",
+    "total_visitors",
+    "visitor_count",
+    # Accommodation-report measures.
+    "foreign_guest_check_ins",
+    "foreign_guest_nights",
+    "guest_check_ins",
+    "guest_nights",
+    "room_usage_count",
+    "rooms_occupied",
+    "short_stay_check_ins",
+    "total_check_ins",
+    "total_guest_nights",
+    "total_occupied_rooms",
+    "total_rooms",
+    # Room-occupancy-detail measures.
+    "check_ins",
+    "number_of_rooms",
+    "occupied_rooms",
+}
+
+
 def is_numeric_field(name: str) -> bool:
-    return any(token in name for token in ("count", "rooms", "room_", "guest", "night", "occup", "arrival", "departure", "visitor"))
+    """Return whether a field is a known numeric measure.
+
+    Do not infer numeric type from broad substrings such as ``guest`` or
+    ``room_``: VistaBalayan also has text fields such as ``guest_name``,
+    ``guest_group_name``, ``room_code``, and ``room_type``.
+    """
+    return name in NUMERIC_FIELDS
 
 
 def read_rows(sqlite_path: Path, raw_dir: Path, dataset: str) -> list[dict[str, Any]]:
